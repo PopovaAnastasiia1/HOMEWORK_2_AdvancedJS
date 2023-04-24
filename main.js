@@ -1,6 +1,4 @@
 const root = document.querySelector("#root");
-const list = document.createElement("ul");
-root.append(list);
 
 const books = [
   {
@@ -32,15 +30,40 @@ const books = [
   },
 ];
 
-books.forEach((book) => {
-  try {
-    if (!book.author || !book.name || !book.price) {
-      throw new Error(`В об'єкті масиву немає усіх властивостей. ${JSON.stringify(book)}`);
+function getError(arr) {
+  arr.forEach((book) => {
+    try {
+      if (!book.author) {
+        throw new Error(
+          `В об'єкті ${JSON.stringify(book)} масиву немає властивості author`
+        );
+      } else if (!book.name) {
+        throw new Error(
+          `В об'єкті ${JSON.stringify(book)} масиву немає властивості name`
+        );
+      } else if (!book.price) {
+        throw new Error(
+          `В об'єкті ${JSON.stringify(book)} масиву немає властивості price`
+        );
+      }
+    } catch (error) {
+      console.error(error);
     }
-    const listItem = document.createElement("li");
-    listItem.innerHTML = `${book.author} - "${book.name}" - ${book.price} грн.`;
-    list.append(listItem);
-  } catch (error) {
-    console.error(err.message);
-  }
-});
+  });
+}
+
+getError(books);
+
+function createList(arr) {
+  const list = document.createElement("ul");
+  root.append(list);
+  arr.forEach((book) => {
+    if (book.author && book.name && book.price) {
+      const listItem = document.createElement("li");
+      listItem.innerHTML = `${book.author} - "${book.name}" - ${book.price} грн.`;
+      list.append(listItem);
+    }
+  });
+}
+
+createList(books);
